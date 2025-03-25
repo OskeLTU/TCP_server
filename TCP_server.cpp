@@ -15,7 +15,11 @@ int Error_reurner() {
 	char* Error_Message;
 	
 	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-		0, Error_code, MAKELANGID(LANG_NATURAL, SUBLANG_DEFAULT), (LPSTR)&Error_Message, 0, 0);
+		0, Error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR)&Error_Message, 0, 0);
+
+	std::cout << Error_Message << '\n';
+
+	return Error_code;
 }
 
 
@@ -30,7 +34,8 @@ int initialize_wsa() {
 		return 0;
 	}
 	else {
-		std::cout << "ERROR" << '\n';
+		std::cout << "error with initialization" << '\n';
+		Error_reurner(); 
 		return 1;
 	}
 	//->initialazation part end
@@ -46,6 +51,7 @@ int clean_up() {
 	}
 	else {
 		std::cout << "ERROR with cleanup" << '\n';
+		Error_reurner();
 		return 1;
 	}
 
@@ -57,6 +63,7 @@ SOCKET create_socket(int domain, int type, int protocol) {
 	SOCKET made_socket = socket(domain, type, protocol);
 	if (made_socket == INVALID_SOCKET) {
 		std::cout << "error with socket creation" << '\n';
+		Error_reurner();
 		return INVALID_SOCKET;
 	}
 	else {
@@ -74,6 +81,7 @@ int close_socket(SOCKET n) {
 	}
 	else {
 		std::cout << "ERROR with closing" << '\n';
+		Error_reurner();
 		return 1;
 	}
 
@@ -87,6 +95,7 @@ int bind_socket(SOCKET n, sockaddr_in server) {
 	}
 	else {
 		std::cout << "error with binding" << '\n';
+		Error_reurner();
 		return 1;
 	};
 }
@@ -99,6 +108,7 @@ int listen_func(SOCKET n, int backlog) {
 	}
 	else {
 		std::cout << "ERROR with listening" << '\n';
+		Error_reurner();
 		return 1;
 	};
 }
@@ -108,6 +118,7 @@ SOCKET accept_func(SOCKET n, sockaddr* addr, int* addrlen) {
 	socket_obj = accept(n, addr, addrlen);
 	if (socket_obj == INVALID_SOCKET) {
 		std::cout << "accept failiure" << '\n';
+		Error_reurner();
 		return INVALID_SOCKET;
 	}
 	else {
@@ -130,7 +141,8 @@ bool is_client_connected(SOCKET client_socket) {
 		return false;  // Client disconnected gracefully
 	}
 	else {
-		std::cout << "Network error: " << WSAGetLastError() << '\n';
+		std::cout << "There was an unexpected error" << '\n';
+		Error_reurner();
 		return false;  // Network error or wrong error
 	}
 }
@@ -151,6 +163,7 @@ void receive_the_message(SOCKET client_socket) {
 		}
 		else {
 			std::cout << "error with network" << '\n';
+			Error_reurner();
 			break;
 		};	
 		memset(buffer, 0, 1023);
@@ -198,6 +211,8 @@ int main() {
 	sockaddr_in server = set_server_parameters();
 
 	initialize_wsa();
+
+	
 
 	SOCKET server_1 = create_socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
