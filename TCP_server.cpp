@@ -10,6 +10,12 @@
 
 //server /////////////////////////////////////////////////////////////
 
+int Error_reurner() {
+	int Error_code = WSAGetLastError();
+	char Error_Message = FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,0,Error_code,MAKELANGID(LANG_NATURAL, SUBLANG_DEFAULT), 
+}
+
+
 
 int initialize_wsa() {
 	WSADATA wsaData{};
