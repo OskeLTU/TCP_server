@@ -179,20 +179,22 @@ void sign_clean(int signal){
 sockaddr_in set_server_parameters() {
 	sockaddr_in server{};
 	std::string ip;
-	int port{}, choice;
+	int port{}, choice{};
 
-	std::cout << "for preset of ip type 1, for manual input type 2: " << '\n;
-	
+	std::cout << "for preset of ip type 1, for manual input type 2: ";
+	std::cin >> choice;
+
 	if(choice == 1){
 	ip = "0.0.0.0";
 	port = 8080;
-	}else{
+	}else if(choice == 2){
 	std::cout << "Enter ip for server: ";
 	std::cin >> ip;
 
 	std::cout << "Enter Port number: ";
 	std::cin >> port;
 	}
+
 	server.sin_family = AF_INET;
 	server.sin_port = htons(port);
 
